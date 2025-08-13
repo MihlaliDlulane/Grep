@@ -30,8 +30,7 @@ int main(int argc, char *argv[]) {
     if (regexSearch(regex,text) == 1) {
         printf("Regex match\n");
         return 0;
-    } else {
-        printf("Regex not match\n");
-        return -1;
     }
+    printf("Regex not match\n");
+    return -1;
 }
