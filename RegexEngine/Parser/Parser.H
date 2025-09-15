@@ -14,9 +14,9 @@ struct token {
 
 int countTokens(const char*regex);
 
-void tokeniser(const char *regex,token *resultTokenArray);
+int tokeniser(const char *regex,token *resultTokenArray);
 
-bool regexChecker(const char *regex);
+bool regexChecker(token *tokenArray, int tokenCount);
 
 RegexTokenType tokenChecker(char token);
 

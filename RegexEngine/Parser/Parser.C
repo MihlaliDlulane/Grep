@@ -46,7 +46,8 @@ RegexTokenType tokenChecker(char token) {
   return LITERAL;
 }
 
-void tokeniser(const char *regex, token *ResultTokenArray) {
+int tokeniser(const char *regex, token *ResultTokenArray) {
+  
   int regexLength = strlen(regex);
   int assignCount = 0;
   bool insideCharClass = false;
@@ -120,78 +121,7 @@ void tokeniser(const char *regex, token *ResultTokenArray) {
     ResultTokenArray[assignCount] = t1;
     assignCount++;
   }
+
+  return assignCount;
 }
 
-// bool regexChecker(const char *regex) {
-
-// if (strlen(regex) == 0)
-//   return true;
-
-// char stack[100];
-// int top = -1;
-// char currentChar;
-
-// for (int i = 0; regex[i] != '\0'; i++) {
-//   currentChar = regex[i];
-
-//   if (i == 0) {
-//     if (currentChar == '*' || currentChar == '|') {
-//       return false;
-//     }
-//   }
-
-//   if (regex[i + 1] != '\0') {
-//     if (currentChar == '*' || currentChar == '|') {
-//       if (regex[i + 1] == '*' || regex[i + 1] == '|' || regex[i + 1] == '(')
-//       {
-//         return false;
-//       }
-//     }
-//   }
-
-//   if (currentChar == '(') {
-
-//     if (regex[i + 1] != '\0') {
-//       if (regex[i + 1] == '*' || regex[i + 1] == '|' || regex[i + 1] == ')')
-//       {
-//         return false;
-//       }
-//     }
-
-//     if (top >= 99) {
-//       printf("Stack Overflow On Parantheses Balance Check\n");
-//       return false;
-//     }
-//     stack[++top] = currentChar;
-
-//   } else if (currentChar == ')') {
-
-//     if (i > 0) {
-//       if (regex[i - 1] == '|') {
-//         return false;
-//       }
-//     }
-
-//     if (regex[i + 1] != '\0') {
-//       if (regex[i + 1] == '(') {
-//         return false;
-//       }
-//     }
-
-//     if (top < 1 || stack[top--] != '(') {
-//       return false;
-//     }
-//   }
-// }
-
-// if (top != -1) {
-//   return false;
-// }
-
-// char lastChar = regex[strlen(regex) - 1];
-// if (lastChar == '|' || lastChar == '*') {
-//   return false;
-// }
-
-// return true;
-//}
