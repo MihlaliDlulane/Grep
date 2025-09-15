@@ -47,19 +47,15 @@ RegexTokenType tokenChecker(char token) {
 }
 
 void tokeniser(const char *regex, token *ResultTokenArray) {
+  int regexLength = strlen(regex);
   int assignCount = 0;
   bool insideCharClass = false;
   for (int i = 0; regex[i] != '\0'; i++) {
+    int originalPos = i;
     char currentChar = regex[i];
-    char nextChar;
+    char nextChar = '\0';
     RegexTokenType currentCharType = tokenChecker(currentChar);
 
-    if (currentCharType == BACKLASH) {
-      if (regex[i + 1] != '\0') {
-        nextChar = regex[i + 1];
-      }
-      i++;
-    }
     if (currentCharType == OPEN_BRACKET) {
       insideCharClass = true;
     }
@@ -76,23 +72,46 @@ void tokeniser(const char *regex, token *ResultTokenArray) {
 
     if (i > 0) {
       if (currentChar == '^') {
-        if (regex[i - 1] == '(' || regex[i - 1] == '|') {
+        if (regex[i - 1] == '(' || regex[i - 1] == '|' ) {
+          currentCharType = START_ANCHOR;
+        }
+        if (regex[i - 1] == '[' && !insideCharClass) {
           currentCharType = START_ANCHOR;
         }
       }
     }
+    
+    if (regex[i + 1] != '\0') {
+      if(currentChar == '$'){
+        if(regex[i+1] == ')' || regex[i+1] == '|' || regex[i+1] == ']'){
+          currentCharType = END_ANCHOR;
+        }
+      }
 
-    if (i == strlen(regex) - 1) {
+    if (i == regexLength - 1) {
       if (currentChar == '$') {
         currentCharType = END_ANCHOR;
       }
     }
 
+    if (currentCharType == BACKLASH) {
+      if (regex[i + 1] != '\0') {
+        nextChar = regex[i + 1];
+      }
+      i++;
+    }
+
     struct token t1;
     t1.character = currentChar;
     t1.tokenType = currentCharType;
-    t1.position = i;
-    t1.insideCharacterClass = insideCharClass;
+    t1.position = originalPos;
+
+    if(insideCharClass && currentCharType != OPEN_BRACKET && currentCharType != CLOSE_BRACKET) {
+      t1.insideCharacterClass = insideCharClass;
+    } else {
+      t1.insideCharacterClass = false;
+    }
+    
 
     if (currentCharType == BACKLASH) {
       t1.escapedChar = nextChar;
