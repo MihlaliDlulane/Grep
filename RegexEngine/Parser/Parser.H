@@ -1,16 +1,17 @@
 #ifndef Parser_H
 #define Parser_H
+#include <stdbool.h>
 
 
-enum RegexTokenType { LITERAL, OPEN_P,CLOSE_P,STAR,PLUS,QUESTION,PIPE,OPEN_BRACKET,CLOSE_BRACKET,DOT,BACKLASH,START_ANCHOR,END_ANCHOR};
+typedef enum { LITERAL, OPEN_P,CLOSE_P,STAR,PLUS,QUESTION,PIPE,OPEN_BRACKET,CLOSE_BRACKET,DOT,BACKLASH,START_ANCHOR,END_ANCHOR} RegexTokenType;
 
-struct token {
+typedef struct{
   char character;
   RegexTokenType tokenType;
   int position;
   bool insideCharacterClass;
   char escapedChar;
-};
+} token;
 
 int countTokens(const char*regex);
 

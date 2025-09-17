@@ -47,7 +47,7 @@ RegexTokenType tokenChecker(char token) {
 }
 
 int tokeniser(const char *regex, token *ResultTokenArray) {
-  
+
   int regexLength = strlen(regex);
   int assignCount = 0;
   bool insideCharClass = false;
@@ -102,7 +102,7 @@ int tokeniser(const char *regex, token *ResultTokenArray) {
       i++;
     }
 
-    struct token t1;
+    token t1;
     t1.character = currentChar;
     t1.tokenType = currentCharType;
     t1.position = originalPos;
