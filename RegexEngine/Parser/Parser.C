@@ -1,5 +1,4 @@
 #include "Parser.H"
-#include <cstddef>
 #include <cstring>
 
 RegexTokenType tokenChecker(char token) {
@@ -73,7 +72,7 @@ int tokeniser(const char *regex, token *ResultTokenArray) {
 
     if (i > 0) {
       if (currentChar == '^') {
-        if (regex[i - 1] == '(' || regex[i - 1] == '|' ) {
+        if (regex[i - 1] == '(' || regex[i - 1] == '|') {
           currentCharType = START_ANCHOR;
         }
         if (regex[i - 1] == '[' && !insideCharClass) {
@@ -81,47 +80,46 @@ int tokeniser(const char *regex, token *ResultTokenArray) {
         }
       }
     }
-    
+
     if (regex[i + 1] != '\0') {
-      if(currentChar == '$'){
-        if(regex[i+1] == ')' || regex[i+1] == '|' || regex[i+1] == ']'){
+      if (currentChar == '$') {
+        if (regex[i + 1] == ')' || regex[i + 1] == '|' || regex[i + 1] == ']') {
           currentCharType = END_ANCHOR;
         }
       }
 
-    if (i == regexLength - 1) {
-      if (currentChar == '$') {
-        currentCharType = END_ANCHOR;
+      if (i == regexLength - 1) {
+        if (currentChar == '$') {
+          currentCharType = END_ANCHOR;
+        }
       }
-    }
 
-    if (currentCharType == BACKLASH) {
-      if (regex[i + 1] != '\0') {
-        nextChar = regex[i + 1];
+      if (currentCharType == BACKLASH) {
+        if (regex[i + 1] != '\0') {
+          nextChar = regex[i + 1];
+        }
+        i++;
       }
-      i++;
+
+      token t1;
+      t1.character = currentChar;
+      t1.tokenType = currentCharType;
+      t1.position = originalPos;
+
+      if (insideCharClass && currentCharType != OPEN_BRACKET &&
+          currentCharType != CLOSE_BRACKET) {
+        t1.insideCharacterClass = insideCharClass;
+      } else {
+        t1.insideCharacterClass = false;
+      }
+
+      if (currentCharType == BACKLASH) {
+        t1.escapedChar = nextChar;
+      }
+
+      ResultTokenArray[assignCount] = t1;
+      assignCount++;
     }
-
-    token t1;
-    t1.character = currentChar;
-    t1.tokenType = currentCharType;
-    t1.position = originalPos;
-
-    if(insideCharClass && currentCharType != OPEN_BRACKET && currentCharType != CLOSE_BRACKET) {
-      t1.insideCharacterClass = insideCharClass;
-    } else {
-      t1.insideCharacterClass = false;
-    }
-    
-
-    if (currentCharType == BACKLASH) {
-      t1.escapedChar = nextChar;
-    }
-
-    ResultTokenArray[assignCount] = t1;
-    assignCount++;
   }
-
   return assignCount;
 }
-
