@@ -1,5 +1,6 @@
 #include "Parser.H"
-#include <cstring>
+#include <stdio.h>
+#include <string.h>
 
 RegexTokenType tokenChecker(char token) {
   if (token == '(') {
@@ -100,26 +101,25 @@ int tokeniser(const char *regex, token *ResultTokenArray) {
         }
         i++;
       }
-
-      token t1;
-      t1.character = currentChar;
-      t1.tokenType = currentCharType;
-      t1.position = originalPos;
-
-      if (insideCharClass && currentCharType != OPEN_BRACKET &&
-          currentCharType != CLOSE_BRACKET) {
-        t1.insideCharacterClass = insideCharClass;
-      } else {
-        t1.insideCharacterClass = false;
-      }
-
-      if (currentCharType == BACKLASH) {
-        t1.escapedChar = nextChar;
-      }
-
-      ResultTokenArray[assignCount] = t1;
-      assignCount++;
     }
+    token t1;
+    t1.character = currentChar;
+    t1.tokenType = currentCharType;
+    t1.position = originalPos;
+
+    if (insideCharClass && currentCharType != OPEN_BRACKET &&
+        currentCharType != CLOSE_BRACKET) {
+      t1.insideCharacterClass = insideCharClass;
+    } else {
+      t1.insideCharacterClass = false;
+    }
+
+    if (currentCharType == BACKLASH) {
+      t1.escapedChar = nextChar;
+    }
+
+    ResultTokenArray[assignCount] = t1;
+    assignCount++;
   }
   return assignCount;
 }

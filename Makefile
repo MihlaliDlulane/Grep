@@ -3,7 +3,7 @@ CC=gcc
 CFLAGS=-Wall -Wextra -IRegexEngine/Parser
 
 # Source files
-PARSER_SRC=RegexEngine/Parser/Parser.C
+PARSER_SRC=RegexEngine/Parser/Parser.c
 TEST_SRC=tests/RegexEngine/Parser/test_tokeniser.c
 
 # Output

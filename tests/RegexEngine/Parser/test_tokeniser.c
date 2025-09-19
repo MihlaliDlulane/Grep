@@ -17,7 +17,6 @@ void test_parser_basic() {
   assert(tokens[6].character == 'c' && tokens[6].tokenType == LITERAL);
   free(tokens);
 }
-
 int main() {
   printf("Running parser tests...\n");
   test_parser_basic();
