@@ -1,5 +1,4 @@
 #include "Parser.H"
-#include <stdio.h>
 #include <string.h>
 
 RegexTokenType tokenChecker(char token) {
