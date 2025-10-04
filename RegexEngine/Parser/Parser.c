@@ -124,6 +124,12 @@ int tokeniser(const char *regex, token *ResultTokenArray) {
 
     if (currentCharType == BACKLASH) {
       t1.escapedChar = nextChar;
+      t1.escapedCharType = LITERAL;
+
+      if (nextChar == 'd' || nextChar == 'w' || nextChar == 's' ||
+          nextChar == 'n' || nextChar == 't' || nextChar == 'b') {
+        t1.escapedCharType = SEQUENCE;
+      }
     }
 
     ResultTokenArray[assignCount] = t1;

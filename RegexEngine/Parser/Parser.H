@@ -16,7 +16,8 @@ typedef enum {
   BACKLASH,
   START_ANCHOR,
   END_ANCHOR,
-  CHAR_CLASS_NEGATION
+  CHAR_CLASS_NEGATION,
+  SEQUENCE
 } RegexTokenType;
 
 typedef struct {
@@ -25,6 +26,7 @@ typedef struct {
   int position;
   bool insideCharacterClass;
   char escapedChar;
+  RegexTokenType escapedCharType;
 } token;
 
 int countTokens(const char *regex);
