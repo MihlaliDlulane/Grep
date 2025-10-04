@@ -705,6 +705,37 @@ int test_char_class_state() {
   return ok;
 }
 
+int test_token_positions() {
+  const char *regex = "a\\nbc";
+  // Check that positions are correct, especially after escapes
+  token *tokens = malloc(4 * sizeof(token)); // 4 tokens: a, \n, b, c
+  int tokenCount = tokeniser(regex, tokens);
+  int ok = (tokenCount == 4 && tokens[0].character == 'a' &&
+            tokens[0].tokenType == LITERAL && tokens[0].position == 0 &&
+            tokens[1].character == '\\' && tokens[1].tokenType == BACKLASH &&
+            tokens[1].escapedChar == 'n' &&
+            tokens[1].escapedCharType == SEQUENCE && tokens[1].position == 1 &&
+            tokens[2].character == 'b' && tokens[2].tokenType == LITERAL &&
+            tokens[2].position == 3 && tokens[3].character == 'c' &&
+            tokens[3].tokenType == LITERAL && tokens[3].position == 4);
+
+  if (ok != 1) {
+    printf(RED "test_token_positions failed:\n" RESET);
+    printf("Token count: %d (expected 4)\n", tokenCount);
+    for (int i = 0; i < tokenCount && i < 4; i++) {
+      printf("token %d, character: %c, type: %s, position: %d\n", i + 1,
+             tokens[i].character, tokenNames[tokens[i].tokenType],
+             tokens[i].position);
+      if (tokens[i].tokenType == BACKLASH) {
+        printf("  escapedChar: %c, escapedCharType: %s\n",
+               tokens[i].escapedChar, tokenNames[tokens[i].escapedCharType]);
+      }
+    }
+  }
+  free(tokens);
+  return ok;
+}
+
 int test_parser_basic() {
   const char *regex = "(a|b)*c";
   token *tokens = malloc(7 * sizeof(token));
@@ -748,6 +779,7 @@ int main() {
                {"test_mixed_contexts", test_mixed_contexts},
                {"test_unmatched_brackets", test_unmatched_brackets},
                {"test_unmatched_parens", test_unmatched_parens},
+               {"test_token_positions", test_token_positions},
                {"test_char_class_state", test_char_class_state}};
 
   printf(YELLOW "Running parser tests...\n\n" RESET);
