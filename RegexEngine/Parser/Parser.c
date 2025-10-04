@@ -75,9 +75,6 @@ int tokeniser(const char *regex, token *ResultTokenArray) {
         if (regex[i - 1] == '(' || regex[i - 1] == '|') {
           currentCharType = START_ANCHOR;
         }
-        if (regex[i - 1] == '[' && !insideCharClass) {
-          currentCharType = START_ANCHOR;
-        }
       }
     }
 
@@ -101,6 +98,18 @@ int tokeniser(const char *regex, token *ResultTokenArray) {
         i++;
       }
     }
+
+    if (insideCharClass) {
+      if (currentCharType == STAR || currentCharType == QUESTION ||
+          currentCharType == PLUS) {
+        currentCharType = LITERAL;
+      }
+
+      if (currentChar == '^') {
+        currentCharType = CHAR_CLASS_NEGATION;
+      }
+    }
+
     token t1;
     t1.character = currentChar;
     t1.tokenType = currentCharType;

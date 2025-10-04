@@ -9,6 +9,14 @@
 #define GREEN "\033[32m"
 #define YELLOW "\033[33m"
 
+const char *tokenNames[] = {"LITERAL",       "OPEN_P",
+                            "CLOSE_P",       "STAR",
+                            "PLUS",          "QUESTION",
+                            "PIPE",          "OPEN_BRACKET",
+                            "CLOSE_BRACKET", "DOT",
+                            "BACKLASH",      "START_ANCHOR",
+                            "END_ANCHOR",    "CHAR_CLASS_NEGATION"};
+
 int test_empty_regex() {
   const char *regex = "";
   token *tokens = malloc(1 * sizeof(token));
@@ -37,11 +45,6 @@ int test_single_special() {
   free(tokens);
   return ok;
 }
-
-const char *tokenNames[] = {
-    "LITERAL",  "OPEN_P",       "CLOSE_P",      "STAR",          "PLUS",
-    "QUESTION", "PIPE",         "OPEN_BRACKET", "CLOSE_BRACKET", "DOT",
-    "BACKLASH", "START_ANCHOR", "END_ANCHOR"};
 
 int test_start_anchor() {
   int ok = 1;
@@ -95,6 +98,79 @@ int test_start_anchor() {
   return ok;
 }
 
+int test_char_class_basic() {
+  const char *regex = "[abc]";
+  // Check insideCharacterClass flags
+  // [ -> false, a -> true, b -> true, c -> true, ] -> true
+  token *tokens = malloc(5 * sizeof(token));
+  int tokenCount = tokeniser(regex, tokens);
+  int ok = (tokenCount == 5 && tokens[0].character == '[' &&
+            tokens[0].tokenType == OPEN_BRACKET && tokens[1].character == 'a' &&
+            tokens[1].tokenType == LITERAL && tokens[1].insideCharacterClass &&
+            tokens[2].character == 'b' && tokens[2].tokenType == LITERAL &&
+            tokens[2].insideCharacterClass && tokens[3].character == 'c' &&
+            tokens[3].tokenType == LITERAL && tokens[3].insideCharacterClass &&
+            tokens[4].character == ']' && tokens[4].tokenType == CLOSE_BRACKET);
+  free(tokens);
+
+  return ok;
+}
+
+int test_char_class_negation() {
+  const char *regex = "[^abc]";
+  // ^ after [ should be negation
+  token *tokens = malloc(6 * sizeof(token));
+  int tokenCount = tokeniser(regex, tokens);
+  int ok = (tokenCount == 6 && tokens[0].character == '[' &&
+            tokens[0].tokenType == OPEN_BRACKET && tokens[1].character == '^' &&
+            tokens[1].tokenType == CHAR_CLASS_NEGATION &&
+            tokens[1].insideCharacterClass && tokens[2].character == 'a' &&
+            tokens[2].tokenType == LITERAL && tokens[2].insideCharacterClass &&
+            tokens[3].character == 'b' && tokens[3].tokenType == LITERAL &&
+            tokens[3].insideCharacterClass && tokens[4].character == 'c' &&
+            tokens[4].tokenType == LITERAL && tokens[5].character == ']' &&
+            tokens[5].tokenType == CLOSE_BRACKET);
+
+  free(tokens);
+
+  return ok;
+}
+
+int test_char_class_special_chars() {
+  const char *regex = "[*+?]";
+  // Special chars are literals inside []
+
+  token *tokens = malloc(5 * sizeof(token));
+  int tokenCount = tokeniser(regex, tokens);
+  int ok = (tokenCount == 5 && tokens[0].character == '[' &&
+            tokens[0].tokenType == OPEN_BRACKET && tokens[1].character == '*' &&
+            tokens[1].tokenType == LITERAL && tokens[1].insideCharacterClass &&
+            tokens[2].character == '+' && tokens[2].tokenType == LITERAL &&
+            tokens[2].insideCharacterClass && tokens[3].character == '?' &&
+            tokens[3].tokenType == LITERAL && tokens[3].insideCharacterClass &&
+            tokens[4].character == ']' && tokens[4].tokenType == CLOSE_BRACKET);
+  if (ok == -1) {
+    printf("token 1, character: %c and type:%s \n", tokens[0].character,
+           tokenNames[tokens[0].tokenType]);
+    printf("token 2, character: %c and type:%s \n", tokens[1].character,
+           tokenNames[tokens[1].tokenType]);
+    printf("token 3, character: %c and type:%s \n", tokens[2].character,
+           tokenNames[tokens[2].tokenType]);
+    printf("token 4, character: %c and type:%s \n", tokens[3].character,
+           tokenNames[tokens[3].tokenType]);
+    printf("token 5, character: %c and type:%s \n", tokens[4].character,
+           tokenNames[tokens[4].tokenType]);
+  }
+
+  free(tokens);
+
+  return ok;
+}
+void test_char_class_escaped() {
+  const char *regex = "[\\]]";
+  // Escaped ] inside character class
+}
+
 int test_parser_basic() {
   const char *regex = "(a|b)*c";
   token *tokens = malloc(7 * sizeof(token));
@@ -115,13 +191,14 @@ int main() {
   struct {
     const char *name;
     int (*func)();
-  } tests[] = {
-      {"test_empty_regex", test_empty_regex},
-      {"test_single_char", test_single_char},
-      {"test_single_special", test_single_special},
-      {"test_start_anchor", test_start_anchor},
-      {"test_parser_basic", test_parser_basic},
-  };
+  } tests[] = {{"test_empty_regex", test_empty_regex},
+               {"test_single_char", test_single_char},
+               {"test_single_special", test_single_special},
+               {"test_start_anchor", test_start_anchor},
+               {"test_parser_basic", test_parser_basic},
+               {"test_char_class_basic", test_char_class_basic},
+               {"test_char_class_special_chars", test_char_class_special_chars},
+               {"test_char_class_negation", test_char_class_negation}};
 
   printf(YELLOW "Running parser tests...\n\n" RESET);
   int total = sizeof(tests) / sizeof(tests[0]);
