@@ -499,13 +499,13 @@ int test_valid_anchors() {
   free(tokens);
 
   const char *regex6 = "(^abc)|(def$)";
-  tokens = malloc(10 * sizeof(token));
+  tokens = malloc(13 * sizeof(token));
   tokenCount = tokeniser(regex6, tokens);
-  if (!(tokenCount == 10 && regexChecker(tokens, tokenCount))) {
+  if (!(tokenCount == 13 && regexChecker(tokens, tokenCount))) {
     ok = 0;
     printf(RED "test_valid_anchors failed for regex: %s\n" RESET, regex6);
-    printf("Token count: %d (expected 10)\n", tokenCount);
-    for (int i = 0; i < tokenCount && i < 10; i++) {
+    printf("Token count: %d (expected 13)\n", tokenCount);
+    for (int i = 0; i < tokenCount && i < 13; i++) {
       printf("token %d, character: %c, type: %s%s\n", i + 1,
              tokens[i].character, tokenNames[tokens[i].tokenType],
              tokens[i].insideCharacterClass ? ", insideCharacterClass: true"
@@ -601,13 +601,13 @@ int test_valid_escapes() {
   free(tokens);
 
   const char *regex5 = "\\[\\]";
-  tokens = malloc(3 * sizeof(token));
+  tokens = malloc(2 * sizeof(token));
   tokenCount = tokeniser(regex5, tokens);
-  if (!(tokenCount == 3 && regexChecker(tokens, tokenCount))) {
+  if (!(tokenCount == 2 && regexChecker(tokens, tokenCount))) {
     ok = 0;
     printf(RED "test_valid_escapes failed for regex: %s\n" RESET, regex5);
-    printf("Token count: %d (expected 3)\n", tokenCount);
-    for (int i = 0; i < tokenCount && i < 3; i++) {
+    printf("Token count: %d (expected 2)\n", tokenCount);
+    for (int i = 0; i < tokenCount && i < 2; i++) {
       printf("token %d, character: %c, type: %s%s\n", i + 1,
              tokens[i].character, tokenNames[tokens[i].tokenType],
              tokens[i].insideCharacterClass ? ", insideCharacterClass: true"
@@ -687,9 +687,9 @@ int test_valid_complex() {
   int ok = 1;
 
   const char *regex1 = "(a|b)*abb";
-  token *tokens = malloc(8 * sizeof(token));
+  token *tokens = malloc(9 * sizeof(token));
   int tokenCount = tokeniser(regex1, tokens);
-  if (!(tokenCount == 8 && regexChecker(tokens, tokenCount))) {
+  if (!(tokenCount == 9 && regexChecker(tokens, tokenCount))) {
     ok = 0;
     printf(RED "test_valid_complex failed for regex: %s\n" RESET, regex1);
     printf("Token count: %d (expected 8)\n", tokenCount);
@@ -703,13 +703,13 @@ int test_valid_complex() {
   free(tokens);
 
   const char *regex2 = "^[a-zA-Z]+@[a-zA-Z]+\\.[a-zA-Z]+$";
-  tokens = malloc(27 * sizeof(token));
+  tokens = malloc(31 * sizeof(token));
   tokenCount = tokeniser(regex2, tokens);
-  if (!(tokenCount == 27 && regexChecker(tokens, tokenCount))) {
+  if (!(tokenCount == 31 && regexChecker(tokens, tokenCount))) {
     ok = 0;
     printf(RED "test_valid_complex failed for regex: %s\n" RESET, regex2);
-    printf("Token count: %d (expected 27)\n", tokenCount);
-    for (int i = 0; i < tokenCount && i < 27; i++) {
+    printf("Token count: %d (expected 31)\n", tokenCount);
+    for (int i = 0; i < tokenCount && i < 31; i++) {
       printf("token %d, character: %c, type: %s%s\n", i + 1,
              tokens[i].character, tokenNames[tokens[i].tokenType],
              tokens[i].insideCharacterClass ? ", insideCharacterClass: true"
@@ -723,13 +723,13 @@ int test_valid_complex() {
   free(tokens);
 
   const char *regex3 = "\\d{3}-\\d{3}-\\d{4}";
-  tokens = malloc(13 * sizeof(token));
+  tokens = malloc(14 * sizeof(token));
   tokenCount = tokeniser(regex3, tokens);
-  if (!(tokenCount == 13 && regexChecker(tokens, tokenCount))) {
+  if (!(tokenCount == 14 && regexChecker(tokens, tokenCount))) {
     ok = 0;
     printf(RED "test_valid_complex failed for regex: %s\n" RESET, regex3);
-    printf("Token count: %d (expected 13)\n", tokenCount);
-    for (int i = 0; i < tokenCount && i < 13; i++) {
+    printf("Token count: %d (expected 14)\n", tokenCount);
+    for (int i = 0; i < tokenCount && i < 14; i++) {
       printf("token %d, character: %c, type: %s%s\n", i + 1,
              tokens[i].character, tokenNames[tokens[i].tokenType],
              tokens[i].insideCharacterClass ? ", insideCharacterClass: true"
@@ -743,13 +743,13 @@ int test_valid_complex() {
   free(tokens);
 
   const char *regex4 = "(cat|dog)s?";
-  tokens = malloc(10 * sizeof(token));
+  tokens = malloc(11 * sizeof(token));
   tokenCount = tokeniser(regex4, tokens);
-  if (!(tokenCount == 10 && regexChecker(tokens, tokenCount))) {
+  if (!(tokenCount == 11 && regexChecker(tokens, tokenCount))) {
     ok = 0;
     printf(RED "test_valid_complex failed for regex: %s\n" RESET, regex4);
-    printf("Token count: %d (expected 10)\n", tokenCount);
-    for (int i = 0; i < tokenCount && i < 10; i++) {
+    printf("Token count: %d (expected 11)\n", tokenCount);
+    for (int i = 0; i < tokenCount && i < 11; i++) {
       printf("token %d, character: %c, type: %s%s\n", i + 1,
              tokens[i].character, tokenNames[tokens[i].tokenType],
              tokens[i].insideCharacterClass ? ", insideCharacterClass: true"
@@ -763,13 +763,13 @@ int test_valid_complex() {
   free(tokens);
 
   const char *regex5 = "https?://";
-  tokens = malloc(7 * sizeof(token));
+  tokens = malloc(9 * sizeof(token));
   tokenCount = tokeniser(regex5, tokens);
-  if (!(tokenCount == 7 && regexChecker(tokens, tokenCount))) {
+  if (!(tokenCount == 9 && regexChecker(tokens, tokenCount))) {
     ok = 0;
     printf(RED "test_valid_complex failed for regex: %s\n" RESET, regex5);
-    printf("Token count: %d (expected 7)\n", tokenCount);
-    for (int i = 0; i < tokenCount && i < 7; i++) {
+    printf("Token count: %d (expected 9)\n", tokenCount);
+    for (int i = 0; i < tokenCount && i < 9; i++) {
       printf("token %d, character: %c, type: %s%s\n", i + 1,
              tokens[i].character, tokenNames[tokens[i].tokenType],
              tokens[i].insideCharacterClass ? ", insideCharacterClass: true"

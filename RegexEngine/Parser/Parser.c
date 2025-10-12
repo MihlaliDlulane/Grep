@@ -138,4 +138,10 @@ int tokeniser(const char *regex, token *ResultTokenArray) {
   return assignCount;
 }
 
-bool regexChecker(token *tokenArray, int tokenCount) { return 0; }
+bool regexChecker(token *tokenArray, int tokenCount) {
+  bool result = true;
+  for (int i = 0; i < tokenCount; i++) {
+  }
+
+  return result;
+}
