@@ -137,3 +137,5 @@ int tokeniser(const char *regex, token *ResultTokenArray) {
   }
   return assignCount;
 }
+
+bool regexChecker(token *tokenArray, int tokenCount) { return 0; }
